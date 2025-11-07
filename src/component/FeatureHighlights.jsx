@@ -1,35 +1,39 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { User, CalendarCheck, MapPin, BarChart2 } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { User, CalendarCheck, MapPin, BarChart2 } from "lucide-react";
 
 const featureData = [
   {
     icon: User,
     title: "Secure Registration",
-    description: "Verify your identity and create a digital vaccine record, eliminating manual errors and data mismatch issues.",
+    description:
+      "Verify your identity and create a digital vaccine record, eliminating manual errors and data mismatch issues.",
     gradient: "from-emerald-400 to-teal-500",
     glow: "shadow-emerald-500/50",
   },
   {
     icon: CalendarCheck,
     title: "Dynamic Appointment Booking",
-    description: "Effortlessly book, reschedule, and receive automated reminders for your vaccination slots, reducing queues and wait times.",
+    description:
+      "Effortlessly book, reschedule, and receive automated reminders for your vaccination slots, reducing queues and wait times.",
     gradient: "from-amber-400 to-orange-500",
     glow: "shadow-amber-500/50",
   },
   {
     icon: MapPin,
     title: "Center & Stock Visibility",
-    description: "View real-time vaccine stock levels and locations, ensuring availability before you travel to a center.",
+    description:
+      "View real-time vaccine stock levels and locations, ensuring availability before you travel to a center.",
     gradient: "from-cyan-400 to-sky-500",
     glow: "shadow-cyan-500/50",
   },
   {
     icon: BarChart2,
     title: "AI-Powered Wastage Tracking",
-    description: "Authorities gain predictive insights and real-time alerts to monitor vaccine movement and minimize wastage.",
+    description:
+      "Authorities gain predictive insights and real-time alerts to monitor vaccine movement and minimize wastage.",
     gradient: "from-purple-400 to-pink-500",
     glow: "shadow-purple-500/50",
   },
@@ -101,7 +105,8 @@ export default function FeatureHighlights() {
           transition={{ delay: 0.25, duration: 0.6 }}
           className="text-lg md:text-xl text-slate-600 mb-16 max-w-3xl mx-auto"
         >
-          Solving the key challenges of record mismatch, queuing, and stock visibility in one seamless platform.
+          Solving the key challenges of record mismatch, queuing, and stock
+          visibility in one seamless platform.
         </motion.p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
@@ -144,8 +149,13 @@ export default function FeatureHighlights() {
                     className="mb-5 flex justify-center"
                     whileHover={iconHover}
                   >
-                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} shadow-lg`}>
-                      <feature.icon className="w-8 h-8 text-white" strokeWidth={2.5} />
+                    <div
+                      className={`p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} shadow-lg`}
+                    >
+                      <feature.icon
+                        className="w-8 h-8 text-white"
+                        strokeWidth={2.5}
+                      />
                     </div>
                   </motion.div>
 

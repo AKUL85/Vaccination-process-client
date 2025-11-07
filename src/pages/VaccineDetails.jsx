@@ -89,25 +89,27 @@ export default function VaccineDetails() {
     );
   }
 
-  const handleApply = async () => {
-    setApplying(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast({
-        title: "Application Successful!",
-        description: "Your vaccination has been scheduled.",
-      });
-      navigate("/vaccine-card");
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to apply. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setApplying(false);
-    }
-  };
+    const handleApply = async () => {
+      setApplying(true);
+      try {
+        // Simulate API
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        toast({
+          title: "Application Successful!",
+          description: "Your vaccination has been scheduled.",
+        });
+
+        navigate(`/appointment/${vaccine.id}`);
+      } catch {
+        toast({
+          title: "Error",
+          description: "Failed to apply. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setApplying(false);
+      }
+    };
 
   return (
     <div className="min-h-screen py-12 bg-gradient-to-br from-emerald-50 via-white to-teal-50">

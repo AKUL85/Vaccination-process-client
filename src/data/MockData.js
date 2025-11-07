@@ -1,29 +1,29 @@
-// data/MockData.js (or wherever you keep your mock data)
-
 export const mockVaccines = [
   {
     id: "v1",
     name: "COVID-19 mRNA Vaccine",
     manufacturer: "Moderna",
-    description: "Advanced mRNA technology vaccine providing robust protection against COVID-19 variants",
+    description:
+      "Advanced mRNA technology vaccine providing robust protection against COVID-19 variants",
     dosesRequired: 2,
     ageEligibility: "12+ years",
     availabilityCount: 2500,
     efficacy: "94.1%",
     sideEffects: ["Mild fever", "Fatigue", "Injection site pain"],
-    imageUrl: "/placeholder.svg"
+    imageUrl: "/placeholder.svg",
   },
   {
     id: "v2",
     name: "Influenza Vaccine",
     manufacturer: "GSK",
-    description: "Seasonal flu vaccine protecting against common influenza strains",
+    description:
+      "Seasonal flu vaccine protecting against common influenza strains",
     dosesRequired: 1,
     ageEligibility: "6 months+",
     availabilityCount: 5000,
     efficacy: "60-70%",
     sideEffects: ["Soreness", "Low-grade fever"],
-    imageUrl: "/placeholder.svg"
+    imageUrl: "/placeholder.svg",
   },
   {
     id: "v3",
@@ -35,7 +35,7 @@ export const mockVaccines = [
     availabilityCount: 1800,
     efficacy: "95%",
     sideEffects: ["Mild fever", "Headache"],
-    imageUrl: "/placeholder.svg"
+    imageUrl: "/placeholder.svg",
   },
   {
     id: "v4",
@@ -47,7 +47,7 @@ export const mockVaccines = [
     availabilityCount: 3200,
     efficacy: "97%",
     sideEffects: ["Rash", "Fever", "Swollen glands"],
-    imageUrl: "/placeholder.svg"
+    imageUrl: "/placeholder.svg",
   },
   {
     id: "v5",
@@ -59,7 +59,7 @@ export const mockVaccines = [
     availabilityCount: 4100,
     efficacy: "100%",
     sideEffects: ["Redness at site", "Body aches"],
-    imageUrl: "/placeholder.svg"
+    imageUrl: "/placeholder.svg",
   },
   {
     id: "v6",
@@ -71,11 +71,10 @@ export const mockVaccines = [
     availabilityCount: 2700,
     efficacy: "90%",
     sideEffects: ["Pain at site", "Dizziness"],
-    imageUrl: "/placeholder.svg"
-  }
+    imageUrl: "/placeholder.svg",
+  },
 ];
 
-// Set a default currentUser with at least one vaccination for demo/testing purposes
 export let currentUser = {
   id: "u1",
   name: "Akul Biswas",
@@ -90,12 +89,11 @@ export let currentUser = {
       dateAdministered: "2025-10-28T00:00:00.000Z",
       centre: "Sylhet Medical Center",
       batchNumber: "BATCH-ABC123",
-      status: "completed"
-    }
-  ]
+      status: "completed",
+    },
+  ],
 };
 
-// Mock login function
 export const mockLogin = (email, password) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -106,7 +104,7 @@ export const mockLogin = (email, password) => {
           email,
           age: 28,
           phone: "+1234567890",
-          vaccinations: currentUser.vaccinations  // keep demo vaccination data here
+          vaccinations: [],
         };
         currentUser = user;
         resolve(user);
@@ -117,7 +115,6 @@ export const mockLogin = (email, password) => {
   });
 };
 
-// Mock signup function
 export const mockSignup = (name, email, password) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -127,7 +124,7 @@ export const mockSignup = (name, email, password) => {
         email,
         age: 25,
         phone: "+1234567890",
-        vaccinations: []  // new user has empty vaccinations
+        vaccinations: [],
       };
       currentUser = user;
       resolve(user);
@@ -135,7 +132,63 @@ export const mockSignup = (name, email, password) => {
   });
 };
 
-// Function to apply for a vaccine (adds vaccination record to currentUser)
+// Mock appointment slots data
+export const generateAppointmentSlots = (daysAhead = 14) => {
+  const slots = [];
+  const timeSlots = [
+    { time: "09:00 AM", capacity: 20 },
+    { time: "10:00 AM", capacity: 20 },
+    { time: "11:00 AM", capacity: 20 },
+    { time: "12:00 PM", capacity: 15 },
+    { time: "02:00 PM", capacity: 20 },
+    { time: "03:00 PM", capacity: 20 },
+    { time: "04:00 PM", capacity: 15 },
+    { time: "05:00 PM", capacity: 10 },
+  ];
+
+  for (let i = 1; i <= daysAhead; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+
+    slots.push({
+      date: date.toISOString(),
+      slots: timeSlots.map((slot, idx) => ({
+        id: `${date.toDateString()}-${idx}`,
+        time: slot.time,
+        available: Math.floor(Math.random() * slot.capacity),
+        capacity: slot.capacity,
+      })),
+    });
+  }
+
+  return slots;
+};
+
+export const bookAppointment = (vaccine, date, timeSlot) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const vaccination = {
+        vaccineId: vaccine.id,
+        vaccineName: vaccine.name,
+        doseTaken: 1,
+        dateAdministered: date,
+        centre: "City Medical Center",
+        batchNumber: `BATCH-${Math.random()
+          .toString(36)
+          .substring(7)
+          .toUpperCase()}`,
+        status: "scheduled",
+      };
+
+      if (currentUser) {
+        currentUser.vaccinations.push(vaccination);
+      }
+
+      resolve(vaccination);
+    }, 1500);
+  });
+};
+
 export const applyForVaccine = (vaccine) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -145,8 +198,11 @@ export const applyForVaccine = (vaccine) => {
         doseTaken: 1,
         dateAdministered: new Date().toISOString(),
         centre: "City Medical Center",
-        batchNumber: `BATCH-${Math.random().toString(36).substring(7).toUpperCase()}`,
-        status: "completed"
+        batchNumber: `BATCH-${Math.random()
+          .toString(36)
+          .substring(7)
+          .toUpperCase()}`,
+        status: "completed",
       };
 
       if (currentUser) {

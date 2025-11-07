@@ -1,22 +1,20 @@
-
-
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ShieldCheck, User, Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ShieldCheck, User, Menu, X } from "lucide-react";
 
 const navVariants = {
   hidden: { y: -100, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    transition: { type: 'spring', stiffness: 130, damping: 20, delay: 0.05 },
+    transition: { type: "spring", stiffness: 130, damping: 20, delay: 0.05 },
   },
 };
 
 const hoverItem = {
   scale: 1.08,
-  transition: { type: 'spring', stiffness: 350 },
+  transition: { type: "spring", stiffness: 350 },
 };
 
 const underline = {
@@ -28,11 +26,12 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const menuItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Find Vaccine', path: '/find-vaccine'},
-    { name: 'VaccineCard', path: '/vaccine-card' },
-    { name: 'FAQ', path: '/faq' },
+    { name: "Home", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Find Vaccine", path: "/find-vaccine" },
+    { name: "VaccineCard", path: "/vaccine-card" },
+
+    { name: "FAQ", path: "/faq" },
   ];
 
   return (
@@ -51,9 +50,9 @@ export default function Navbar() {
           >
             <ShieldCheck className="w-9 h-9 text-emerald-600 dark:text-emerald-400 drop-shadow-md" />
             <motion.span
-              initial={{ color: '#6ee7b7' }}
+              initial={{ color: "#6ee7b7" }}
               animate={{
-                color: ['#6ee7b7', '#34d399', '#10b981', '#34d399', '#6ee7b7'],
+                color: ["#6ee7b7", "#34d399", "#10b981", "#34d399", "#6ee7b7"],
               }}
               transition={{ repeat: Infinity, duration: 5 }}
               className="font-black text-2xl tracking-tighter"
@@ -116,10 +115,10 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ x: '100%' }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed inset-0 z-50 flex flex-col bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl lg:hidden"
           >
             <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-700">
