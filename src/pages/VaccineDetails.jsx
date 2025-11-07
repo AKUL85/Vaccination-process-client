@@ -57,7 +57,7 @@ export default function VaccineDetails() {
   useEffect(() => {
     const fetchVaccine = async () => {
       try {
-        console.log('hello ',_id);
+        console.log("hello ", _id);
         const response = await fetch(
           `http://localhost:5000/api/vaccine/${_id}`
         );
@@ -89,27 +89,27 @@ export default function VaccineDetails() {
     );
   }
 
-    const handleApply = async () => {
-      setApplying(true);
-      try {
-        // Simulate API
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        toast({
-          title: "Application Successful!",
-          description: "Your vaccination has been scheduled.",
-        });
+  const handleApply = async () => {
+    setApplying(true);
+    try {
+      // Simulate API
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      toast({
+        title: "Application Successful!",
+        description: "Your vaccination has been scheduled.",
+      });
 
-        navigate(`/appointment/${vaccine.id}`);
-      } catch {
-        toast({
-          title: "Error",
-          description: "Failed to apply. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setApplying(false);
-      }
-    };
+      navigate(`/appointment/${vaccine._id}`);
+    } catch {
+      toast({
+        title: "Error",
+        description: "Failed to apply. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setApplying(false);
+    }
+  };
 
   return (
     <div className="min-h-screen py-12 bg-gradient-to-br from-emerald-50 via-white to-teal-50">

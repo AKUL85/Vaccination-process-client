@@ -34,14 +34,14 @@ const CalendarSection = ({ selectedDate, setSelectedDate }) => {
           </CardDescription>
         </CardHeader>
 
-        {/* --- THIS IS THE CORRECTED PART --- */}
-        <CardContent className="flex justify-center items-center p-6">
+        {/* CALENDER PART */}
+        <CardContent className="flex justify-center items-center p-2">
           <Calendar
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
             disabled={(date) => date < minDate || date > maxDate}
-            className="w-full max-w-sm"
+            className="w-full "
           />
         </CardContent>
       </Card>
@@ -63,7 +63,7 @@ const CalendarSection = ({ selectedDate, setSelectedDate }) => {
             <p className="font-semibold text-foreground">City Medical Center</p>
             <p className="text-muted-foreground">123 Healthcare Avenue</p>
             <p className="text-muted-foreground">
-              Open: Mon–Sat, 9:00 AM – 6:00 PM
+              Open: Mon-Sat, 9:00 AM - 6:00 PM
             </p>
           </CardContent>
         </Card>

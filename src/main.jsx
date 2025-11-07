@@ -48,21 +48,21 @@ const router = createBrowserRouter([
         element: <Login></Login>,
       },
       {
-        path: "/appointment/:id",
+        path: "/appointment/:_id",
         element: <AppointmentBooking></AppointmentBooking>,
       },
-      {
-        path: "/user-dashboard",
-        element: <UserDashboard></UserDashboard>,
-      },
-      {
-        path: "/staff-dashboard",
-        element: <StaffDashboard></StaffDashboard>,
-      },
-      {
-        path: "/admin-dashboard",
-        element: <AdminDashboard></AdminDashboard>,
-      },
+      // {
+      //   path: "/user-dashboard",
+      //   element: <UserDashboard></UserDashboard>,
+      // },
+      // {
+      //   path: "/staff-dashboard",
+      //   element: <StaffDashboard></StaffDashboard>,
+      // },
+      // {
+      //   path: "/admin-dashboard",
+      //   element: <AdminDashboard></AdminDashboard>,
+      // },
     ],
   },
 ]);

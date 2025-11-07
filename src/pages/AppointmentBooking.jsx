@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -17,16 +17,43 @@ import { useToast } from "../hooks/use-toast";
 import { Button } from "../ui/Button";
 
 const AppointmentBooking = () => {
-  const { id } = useParams();
+  const { _id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const [selectedDate, setSelectedDate] = useState();
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [booking, setBooking] = useState(false);
+  const [vaccine, setVaccine] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const vaccine = mockVaccines.find((v) => v.id === id);
+  // const vaccine = mockVaccines.find((v) => v.id === id);
   const appointmentSlots = useMemo(() => generateAppointmentSlots(), []);
+
+  useEffect(() => {
+    const fetchVaccine = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/vaccine/${_id}`);
+        if (!res.ok) {
+          throw new Error("Vaccine not found");
+        }
+        const data = await res.json();
+        setVaccine(data);
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: err.message,
+          variant: "destructive",
+        });
+        // navigate("/"); // redirect if not found
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVaccine();
+  }, [_id, navigate, toast]);
 
   if (!vaccine) {
     return (
@@ -86,7 +113,7 @@ const AppointmentBooking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background">
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -95,7 +122,7 @@ const AppointmentBooking = () => {
         >
           <Button
             variant="ghost"
-            onClick={() => navigate(`/vaccine/${id}`)}
+            onClick={() => navigate(`/vaccine/${_id}`)}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
