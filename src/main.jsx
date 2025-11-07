@@ -13,6 +13,10 @@ import VaccineDetails from "./pages/VaccineDetails";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import AppointmentBooking from "./pages/AppointmentBooking";
+import AdminDashboard from "./pages/AdminDashboard";
+import StaffDashboard from "./pages/StaffDashBoard";
+import UserDashboard from "./pages/UserDashboard";
+import { AuthProvider } from "./context/AuthContext";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +68,8 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

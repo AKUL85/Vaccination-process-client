@@ -1,47 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const [statusMessage, setStatusMessage] = useState({ text: '', type: 'hidden' });
-    const [isLoading, setIsLoading] = useState(false);
+    const [statusMessage, setStatusMessage] = useState({ text: "", type: "hidden" });
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    }, []);
+  useEffect(() => {
+    if (typeof lucide !== "undefined") lucide.createIcons();
+  }, []);
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        const form = e.target;
-        setIsLoading(true);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
 
-        if (!form.checkValidity()) {
-            setStatusMessage({ 
-                text: 'Please check all required fields.', 
-                type: 'error' 
-            });
-            setIsLoading(false);
-            return;
-        }
-
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        console.log("Login data collected:", data);
-
-        // Simulate API call
-        setTimeout(() => {
-            setStatusMessage({ 
-                text: 'Login successful! Redirecting to dashboard...', 
-                type: 'success' 
-            });
-            setIsLoading(false);
-            
-            setTimeout(() => {
-                form.reset();
-                setStatusMessage({ text: '', type: 'hidden' });
-            }, 2000);
-        }, 1500);
-    };
+    try {
+      await login(email, password);
+      setStatusMessage({ text: "Login successful! Redirecting...", type: "success" });
+      setTimeout(() => navigate("/dashboard"), 1500);
+    } catch (error) {
+      setStatusMessage({ text: "Invalid credentials. Please try again.", type: "error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
     const statusClasses = {
         hidden: 'hidden',
