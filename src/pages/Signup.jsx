@@ -79,9 +79,9 @@ const Signup = () => {
     };
 
     return (
-        <>
-            <style>
-                {`
+      <>
+        <style>
+          {`
                   @keyframes glow-pulse {
                       0%, 100% {
                           box-shadow: 0 0 10px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.1);
@@ -113,105 +113,198 @@ const Signup = () => {
                       border-color: #3b82f6;
                   }
                 `}
-            </style>
+        </style>
 
-            <div id="signup-container" className="bg-white min-h-screen flex items-center justify-center p-4">
-                <div className="w-full max-w-4xl bg-white rounded-2xl p-6 md:p-10 futuristic-card border border-gray-200 shadow-xl">
-                    
-                    <header className="text-center mb-8">
-                        <div className="flex justify-center items-center mb-2 text-blue-600">
-                            <i data-lucide="scan-eye" className="w-8 h-8 mr-3"></i>
-                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-wider">
-                                ACCESS PORTAL 7.0
-                            </h1>
-                        </div>
-                        <p className="text-gray-600 text-lg">Secure Biometric Registration Required</p>
-                    </header>
+        <div
+          id="signup-container"
+          className="bg-white min-h-screen flex items-center justify-center p-4"
+        >
+          <div className="w-full max-w-4xl bg-white rounded-2xl p-6 md:p-10 futuristic-card border border-gray-200 shadow-xl">
+            <header className="text-center mb-8">
+              <div className="flex justify-center items-center mb-2 text-blue-600">
+                <i data-lucide="scan-eye" className="w-8 h-8 mr-3"></i>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-wider">
+                  ACCESS PORTAL 7.0
+                </h1>
+              </div>
+              <p className="text-gray-600 text-lg">
+                Secure Biometric Registration Required
+              </p>
+            </header>
 
-                    <form id="registration-form" onSubmit={handleRegistration} className="space-y-6">
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                           
-                            <div>
-                                <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-2">Personal Data</h2>
-                                
-                                <div className="mb-4">
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                    <input type="text" id="name" name="name" required
-                                           className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500" 
-                                           placeholder="Enter your full name" />
-                                </div>
+            <form
+              id="registration-form"
+              onSubmit={handleRegistration}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-2">
+                    Personal Data
+                  </h2>
 
-                                <div className="mb-4">
-                                    <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                                    <input type="date" id="dob" name="dob" required
-                                           className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500" />
-                                </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
 
-                                <div className="mb-4">
-                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" required
-                                           className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500" 
-                                           placeholder="+1 (555) 555-5555" />
-                                </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="user-role"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      User role
+                    </label>
+                    <select
+                      id="user-role"
+                      name="user-role"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
+                      defaultValue="" // optional: placeholder
+                    >
+                      <option value="" disabled>
+                        Select role
+                      </option>
+                      <option value="admin">Admin</option>
+                      <option value="staff">Staff</option>
+                      <option value="user">User</option>
+                    </select>
+                  </div>
 
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                    <input type="email" id="email" name="email" required
-                                           className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500" 
-                                           placeholder="user@example.com" />
-                                </div>
-                            </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="dob"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      id="dob"
+                      name="dob"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
+                    />
+                  </div>
 
-                            <div>
-                                <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-2">Identity & Location</h2>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
+                      placeholder="+1 (555) 555-5555"
+                    />
+                  </div>
 
-                                <div className="mb-4">
-                                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">Current Address</label>
-                                    <textarea id="address" name="address" rows="3" required
-                                              className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500 resize-none"
-                                              placeholder="Enter your complete address"></textarea>
-                                </div>
-
-                                {renderFileInput(
-                                    'nid_photo', 
-                                    'NID Photo (Front/Back)', 
-                                    'file-up', 
-                                    nidFileName, 
-                                    setNidFileName
-                                )}
-
-                                {renderFileInput(
-                                    'profile_photo', 
-                                    'Profile Photo', 
-                                    'user-plus', 
-                                    profileFileName, 
-                                    setProfileFileName
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="pt-4">
-                            <button type="submit"
-                                    className="w-full p-4 text-lg font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition duration-300
-                                            transform hover:scale-[1.01] shadow-lg shadow-blue-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                <span className="flex items-center justify-center">
-                                    <i data-lucide="rocket" className="w-5 h-5 mr-2"></i>
-                                    Initiate Registration Sequence
-                                </span>
-                            </button>
-                        </div>
-                        <div><h1 className='font-bold text-gray-600'>Already have an account? go to <Link to="/login" className='text-red-400 font-semibold'>Login</Link></h1></div>
-                    </form>
-
-                    <div id="status-message" 
-                        className={statusClasses[statusMessage.type]}>
-                        {statusMessage.text}
-                    </div>
-
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
+                      placeholder="user@example.com"
+                    />
+                  </div>
                 </div>
+
+                <div>
+                  <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-blue-200 pb-2">
+                    Identity & Location
+                  </h2>
+
+                  <div className="mb-4">
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Current Address
+                    </label>
+                    <textarea
+                      id="address"
+                      name="address"
+                      rows="3"
+                      required
+                      className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500 resize-none"
+                      placeholder="Enter your complete address"
+                    ></textarea>
+                  </div>
+
+                  {renderFileInput(
+                    "nid_photo",
+                    "NID Photo (Front/Back)",
+                    "file-up",
+                    nidFileName,
+                    setNidFileName
+                  )}
+
+                  {renderFileInput(
+                    "profile_photo",
+                    "Profile Photo",
+                    "user-plus",
+                    profileFileName,
+                    setProfileFileName
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  className="w-full p-4 text-lg font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition duration-300
+                                            transform hover:scale-[1.01] shadow-lg shadow-blue-600/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <span className="flex items-center justify-center">
+                    <i data-lucide="rocket" className="w-5 h-5 mr-2"></i>
+                    Initiate Registration Sequence
+                  </span>
+                </button>
+              </div>
+              <div>
+                <h1 className="font-bold text-gray-600">
+                  Already have an account? go to{" "}
+                  <Link to="/login" className="text-red-400 font-semibold">
+                    Login
+                  </Link>
+                </h1>
+              </div>
+            </form>
+
+            <div
+              id="status-message"
+              className={statusClasses[statusMessage.type]}
+            >
+              {statusMessage.text}
             </div>
-        </>
+          </div>
+        </div>
+      </>
     );
 };
 

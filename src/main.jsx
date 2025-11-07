@@ -47,6 +47,18 @@ const router = createBrowserRouter([
         path: "/appointment/:id",
         element: <AppointmentBooking></AppointmentBooking>,
       },
+      {
+        path: "/user-dashboard",
+        element: <UserDashboard></UserDashboard>,
+      },
+      {
+        path: "/staff-dashboard",
+        element: <StaffDashboard></StaffDashboard>,
+      },
+      {
+        path: "/admin-dashboard",
+        element: <AdminDashboard></AdminDashboard>,
+      },
     ],
   },
 ]);
