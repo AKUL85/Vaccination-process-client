@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ShieldCheck, User, Menu, X } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const navVariants = {
   hidden: { y: -100, opacity: 0 },
@@ -24,13 +25,13 @@ const underline = {
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user } = useAuth();
 
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "Find Vaccine", path: "/find-vaccine" },
     { name: "VaccineCard", path: "/vaccine-card" },
-
     { name: "FAQ", path: "/faq" },
   ];
 
@@ -77,7 +78,6 @@ export default function Navbar() {
                 >
                   {item.name}
                 </Link>
-
                 <motion.span
                   layoutId="navbar-underline"
                   className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full"
@@ -88,16 +88,26 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Login + Mobile Menu Button */}
+          {/* Login / Profile + Mobile Menu Button */}
           <div className="flex items-center gap-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                to="/signup"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 px-5 py-2.5 rounded-full shadow-lg text-white font-semibold tracking-wide hover:from-emerald-600 hover:to-emerald-700 transition-all"
-              >
-                <User className="w-5 h-5" />
-                Login / Register
-              </Link>
+              {user ? (
+                <Link
+                  to="/profile"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 px-5 py-2.5 rounded-full shadow-lg text-white font-semibold tracking-wide hover:from-emerald-600 hover:to-emerald-700 transition-all"
+                >
+                  <User className="w-5 h-5" />
+                  {user.name || "Profile"}
+                </Link>
+              ) : (
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 px-5 py-2.5 rounded-full shadow-lg text-white font-semibold tracking-wide hover:from-emerald-600 hover:to-emerald-700 transition-all"
+                >
+                  <User className="w-5 h-5" />
+                  Login / Register
+                </Link>
+              )}
             </motion.div>
 
             <button
@@ -155,14 +165,25 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              <Link
-                to="/signup"
-                onClick={() => setMobileOpen(false)}
-                className="mt-6 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 rounded-full text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-emerald-700 transition-all"
-              >
-                <User className="w-5 h-5" />
-                Login / Register
-              </Link>
+              {user ? (
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-6 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 rounded-full text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-emerald-700 transition-all"
+                >
+                  <User className="w-5 h-5" />
+                  {user.name || "Profile"}
+                </Link>
+              ) : (
+                <Link
+                  to="/signup"
+                  onClick={() => setMobileOpen(false)}
+                  className="mt-6 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 rounded-full text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-emerald-700 transition-all"
+                >
+                  <User className="w-5 h-5" />
+                  Login / Register
+                </Link>
+              )}
             </nav>
           </motion.div>
         )}

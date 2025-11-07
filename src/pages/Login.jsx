@@ -22,7 +22,7 @@ const Login = () => {
     try {
       await login(email, password);
       setStatusMessage({ text: "Login successful! Redirecting...", type: "success" });
-      setTimeout(() => navigate("/dashboard"), 1500);
+      setTimeout(() => navigate("/"), 1500);
     } catch (error) {
       setStatusMessage({ text: "Invalid credentials. Please try again.", type: "error" });
     } finally {

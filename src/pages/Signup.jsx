@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from "axios";
+import Swal from "sweetalert2";
 
 const Signup = () => {
   const [statusMessage, setStatusMessage] = useState({ text: "", type: "hidden" });
@@ -18,36 +18,64 @@ const Signup = () => {
     const file = e.target.files[0];
     setFileName(file ? file.name : null);
   }
+  
+
   const handleRegistration = async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
 
     const email = formData.get("email");
-    const password = formData.get("password"); // Add password input in your form
+    const password = formData.get("password"); // Ensure your form includes this field
+
+    // Convert FormData to a plain object
+    const dataToSend = Object.fromEntries(formData.entries());
 
     try {
       // 1️⃣ Create user in Firebase Auth
       const userCredential = await signup(email, password);
       const uid = userCredential.user.uid;
 
-      // 2️⃣ Send user data to backend for storage
-      formData.append("uid", uid);
-      await axios.post("http://localhost:4000/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // 2️⃣ Add Firebase UID to the data
+      dataToSend.uid = uid;
+
+      // 3️⃣ Send user data to backend
+      const response = await fetch("http://localhost:5000/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSend),
       });
 
-      setStatusMessage({
-        text: "Registration successful! Redirecting to login...",
-        type: "success",
+      if (!response.ok) {
+        throw new Error("Failed to signup");
+      }
+
+      const backendData = await response.json();
+      console.log("Backend response:", backendData);
+
+      // ✅ Show success popup
+      Swal.fire({
+        icon: "success",
+        title: "Registration Successful!",
+        text: "You’ll be redirected to the login page shortly.",
+        showConfirmButton: false,
+        timer: 2000,
       });
 
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       console.error("Error during signup:", error);
-      setStatusMessage({ text: error.message, type: "error" });
+
+      // ❌ Show error popup
+      Swal.fire({
+        icon: "error",
+        title: "Signup Failed",
+        text: error.message || "Something went wrong. Please try again.",
+      });
     }
   };
+
+
 
   const fileInputClass = "file-input-wrapper relative block border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center hover:border-blue-600 transition duration-300 cursor-pointer";
 
@@ -163,28 +191,7 @@ const Signup = () => {
                   />
                 </div>
 
-                <div className="mb-4">
-                  <label
-                    htmlFor="user-role"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    User role
-                  </label>
-                  <select
-                    id="user-role"
-                    name="user-role"
-                    required
-                    className="futuristic-input w-full p-3 rounded-lg border border-gray-300 focus:border-blue-500"
-                    defaultValue="" // optional: placeholder
-                  >
-                    <option value="" disabled>
-                      Select role
-                    </option>
-                    <option value="admin">Admin</option>
-                    <option value="staff">Staff</option>
-                    <option value="user">User</option>
-                  </select>
-                </div>
+                
 
                 <div className="mb-4">
                   <label
@@ -273,7 +280,7 @@ const Signup = () => {
                   ></textarea>
                 </div>
 
-                {renderFileInput(
+                {/* {renderFileInput(
                   "nid_photo",
                   "NID Photo (Front/Back)",
                   "file-up",
@@ -287,7 +294,7 @@ const Signup = () => {
                   "user-plus",
                   profileFileName,
                   setProfileFileName
-                )}
+                )} */}
               </div>
             </div>
 

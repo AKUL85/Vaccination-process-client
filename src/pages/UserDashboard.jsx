@@ -16,11 +16,44 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { currentUser, mockVaccines } from '../data/MockData';
+import { useAuth } from '../context/AuthContext';
 
 const UserDashboard = () => {
-  const [user, setUser] = useState(currentUser);
-  const [activeTab, setActiveTab] = useState('overview');
+  const user = useAuth();
+  const [activeTab, setActiveTab] = useState("overview");
   const [nextVaccine, setNextVaccine] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user info from backend
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:5000/users/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user}`, // send JWT token
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch user data");
+
+        const data = await res.json();
+        setUser(data.user); // store fetched user in context
+      } catch (err) {
+        console.error("Error fetching user:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     // Calculate next vaccine date (mock logic)
@@ -29,11 +62,13 @@ const UserDashboard = () => {
       const lastDate = new Date(lastVaccination.dateAdministered);
       const nextDate = new Date(lastDate);
       nextDate.setMonth(nextDate.getMonth() + 6); // Next dose in 6 months
-      
+
       setNextVaccine({
         vaccineName: lastVaccination.vaccineName,
         nextDate: nextDate.toISOString(),
-        daysRemaining: Math.ceil((nextDate - new Date()) / (1000 * 60 * 60 * 24))
+        daysRemaining: Math.ceil(
+          (nextDate - new Date()) / (1000 * 60 * 60 * 24)
+        ),
       });
     }
   }, [user]);
@@ -43,9 +78,9 @@ const UserDashboard = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
@@ -55,9 +90,9 @@ const UserDashboard = () => {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const getUpcomingAppointments = () => {
@@ -68,24 +103,32 @@ const UserDashboard = () => {
         vaccineName: "COVID-19 Booster",
         date: "2025-01-15T10:00:00.000Z",
         center: "City Medical Center",
-        status: "scheduled"
+        status: "scheduled",
       },
       {
         id: 2,
         vaccineName: "Annual Flu Shot",
         date: "2025-03-20T14:30:00.000Z",
         center: "Community Health Clinic",
-        status: "pending"
-      }
+        status: "pending",
+      },
     ];
   };
 
   const getVaccineRecommendations = () => {
-    const takenVaccineIds = user.vaccinations.map(v => v.vaccineId);
-    return mockVaccines.filter(vaccine => !takenVaccineIds.includes(vaccine.id));
+    const takenVaccineIds = user.vaccinations.map((v) => v.vaccineId);
+    return mockVaccines.filter(
+      (vaccine) => !takenVaccineIds.includes(vaccine.id)
+    );
   };
 
-  const StatsCard = ({ icon: Icon, title, value, subtitle, color = "blue" }) => (
+  const StatsCard = ({
+    icon: Icon,
+    title,
+    value,
+    subtitle,
+    color = "blue",
+  }) => (
     <motion.div
       variants={itemVariants}
       className={`bg-white rounded-2xl p-6 shadow-lg border-l-4 border-${color}-500 hover:shadow-xl transition-all duration-300`}
@@ -114,7 +157,9 @@ const UserDashboard = () => {
             <CheckCircle className="w-5 h-5 text-green-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{vaccination.vaccineName}</h3>
+            <h3 className="font-semibold text-gray-900">
+              {vaccination.vaccineName}
+            </h3>
             <p className="text-sm text-gray-600">{vaccination.centre}</p>
           </div>
         </div>
@@ -122,7 +167,7 @@ const UserDashboard = () => {
           Completed
         </span>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-gray-500">Date</p>
@@ -140,7 +185,9 @@ const UserDashboard = () => {
         </div>
         <div>
           <p className="text-gray-500">Status</p>
-          <p className="font-medium text-green-600 capitalize">{vaccination.status}</p>
+          <p className="font-medium text-green-600 capitalize">
+            {vaccination.status}
+          </p>
         </div>
       </div>
     </motion.div>
@@ -157,25 +204,32 @@ const UserDashboard = () => {
             <Calendar className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{appointment.vaccineName}</h3>
+            <h3 className="font-semibold text-gray-900">
+              {appointment.vaccineName}
+            </h3>
             <p className="text-sm text-gray-600">{appointment.center}</p>
           </div>
         </div>
-        <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-          appointment.status === 'scheduled' 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'bg-yellow-100 text-yellow-800'
-        }`}>
-          {appointment.status === 'scheduled' ? 'Confirmed' : 'Pending'}
+        <span
+          className={`px-3 py-1 text-xs font-medium rounded-full ${
+            appointment.status === "scheduled"
+              ? "bg-blue-100 text-blue-800"
+              : "bg-yellow-100 text-yellow-800"
+          }`}
+        >
+          {appointment.status === "scheduled" ? "Confirmed" : "Pending"}
         </span>
       </div>
-      
+
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500">Scheduled Date</p>
           <p className="font-medium text-gray-900">
-            {new Date(appointment.date).toLocaleDateString()} at {' '}
-            {new Date(appointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(appointment.date).toLocaleDateString()} at{" "}
+            {new Date(appointment.date).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         </div>
         <button className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
@@ -204,14 +258,16 @@ const UserDashboard = () => {
           Recommended
         </span>
       </div>
-      
+
       <p className="text-sm text-gray-600 mb-4">{vaccine.description}</p>
-      
+
       <div className="flex items-center justify-between">
         <div className="flex space-x-4 text-sm">
           <span className="text-gray-500">{vaccine.dosesRequired} doses</span>
           <span className="text-gray-500">{vaccine.ageEligibility}</span>
-          <span className="text-green-600 font-medium">{vaccine.efficacy} efficacy</span>
+          <span className="text-green-600 font-medium">
+            {vaccine.efficacy} efficacy
+          </span>
         </div>
         <button className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors">
           Schedule
@@ -234,7 +290,9 @@ const UserDashboard = () => {
               <div className="p-2 rounded-full bg-blue-600">
                 <Shield className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">VaxTrack Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                VaxTrack Dashboard
+              </h1>
             </div>
             <div className="flex items-center space-x-4">
               <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
@@ -246,10 +304,15 @@ const UserDashboard = () => {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </span>
                 </div>
-                <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {user.name}
+                </span>
               </div>
             </div>
           </div>
@@ -270,29 +333,44 @@ const UserDashboard = () => {
               <div className="text-center mb-8">
                 <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white text-xl font-bold">
-                    {user.name.split(' ').map(n => n[0]).join('')}
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </span>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">{user.name}</h2>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  {user.name}
+                </h2>
                 <p className="text-sm text-gray-600">{user.email}</p>
-                <p className="text-xs text-gray-500 mt-1">Age: {user.age} years</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Age: {user.age} years
+                </p>
               </div>
 
               {/* Navigation */}
               <nav className="space-y-2">
                 {[
-                  { id: 'overview', label: 'Overview', icon: User },
-                  { id: 'vaccinations', label: 'My Vaccinations', icon: Syringe },
-                  { id: 'appointments', label: 'Appointments', icon: Calendar },
-                  { id: 'recommendations', label: 'Recommendations', icon: Shield },
+                  { id: "overview", label: "Overview", icon: User },
+                  {
+                    id: "vaccinations",
+                    label: "My Vaccinations",
+                    icon: Syringe,
+                  },
+                  { id: "appointments", label: "Appointments", icon: Calendar },
+                  {
+                    id: "recommendations",
+                    label: "Recommendations",
+                    icon: Shield,
+                  },
                 ].map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${
                       activeTab === item.id
-                        ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? "bg-blue-50 text-blue-600 border border-blue-200"
+                        : "text-gray-600 hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -320,7 +398,7 @@ const UserDashboard = () => {
             className="lg:col-span-3 space-y-8"
           >
             {/* Overview Tab */}
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <>
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -334,8 +412,16 @@ const UserDashboard = () => {
                   <StatsCard
                     icon={Calendar}
                     title="Next Vaccination"
-                    value={nextVaccine ? `${nextVaccine.daysRemaining} days` : "No upcoming"}
-                    subtitle={nextVaccine ? nextVaccine.vaccineName : "Schedule your next dose"}
+                    value={
+                      nextVaccine
+                        ? `${nextVaccine.daysRemaining} days`
+                        : "No upcoming"
+                    }
+                    subtitle={
+                      nextVaccine
+                        ? nextVaccine.vaccineName
+                        : "Schedule your next dose"
+                    }
                     color="blue"
                   />
                   <StatsCard
@@ -357,12 +443,18 @@ const UserDashboard = () => {
                       <div className="flex items-center space-x-4">
                         <AlertCircle className="w-8 h-8" />
                         <div>
-                          <h3 className="text-lg font-semibold">Next Vaccination Due</h3>
+                          <h3 className="text-lg font-semibold">
+                            Next Vaccination Due
+                          </h3>
                           <p className="text-blue-100">
-                            {nextVaccine.vaccineName} in {nextVaccine.daysRemaining} days
+                            {nextVaccine.vaccineName} in{" "}
+                            {nextVaccine.daysRemaining} days
                           </p>
                           <p className="text-sm text-blue-200 mt-1">
-                            Scheduled for {new Date(nextVaccine.nextDate).toLocaleDateString()}
+                            Scheduled for{" "}
+                            {new Date(
+                              nextVaccine.nextDate
+                            ).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -375,7 +467,9 @@ const UserDashboard = () => {
 
                 {/* Recent Vaccinations */}
                 <motion.div variants={itemVariants}>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Vaccinations</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                    Recent Vaccinations
+                  </h2>
                   <div className="grid grid-cols-1 gap-6">
                     {user.vaccinations.slice(-2).map((vaccination, index) => (
                       <VaccinationCard key={index} vaccination={vaccination} />
@@ -385,10 +479,15 @@ const UserDashboard = () => {
 
                 {/* Upcoming Appointments */}
                 <motion.div variants={itemVariants}>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Upcoming Appointments</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                    Upcoming Appointments
+                  </h2>
                   <div className="grid grid-cols-1 gap-6">
                     {getUpcomingAppointments().map((appointment) => (
-                      <AppointmentCard key={appointment.id} appointment={appointment} />
+                      <AppointmentCard
+                        key={appointment.id}
+                        appointment={appointment}
+                      />
                     ))}
                   </div>
                 </motion.div>
@@ -396,9 +495,11 @@ const UserDashboard = () => {
             )}
 
             {/* Vaccinations Tab */}
-            {activeTab === 'vaccinations' && (
+            {activeTab === "vaccinations" && (
               <motion.div variants={itemVariants}>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Vaccination History</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  Vaccination History
+                </h2>
                 <div className="grid grid-cols-1 gap-6">
                   {user.vaccinations.map((vaccination, index) => (
                     <VaccinationCard key={index} vaccination={vaccination} />
@@ -408,21 +509,28 @@ const UserDashboard = () => {
             )}
 
             {/* Appointments Tab */}
-            {activeTab === 'appointments' && (
+            {activeTab === "appointments" && (
               <motion.div variants={itemVariants}>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">My Appointments</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  My Appointments
+                </h2>
                 <div className="grid grid-cols-1 gap-6">
                   {getUpcomingAppointments().map((appointment) => (
-                    <AppointmentCard key={appointment.id} appointment={appointment} />
+                    <AppointmentCard
+                      key={appointment.id}
+                      appointment={appointment}
+                    />
                   ))}
                 </div>
               </motion.div>
             )}
 
             {/* Recommendations Tab */}
-            {activeTab === 'recommendations' && (
+            {activeTab === "recommendations" && (
               <motion.div variants={itemVariants}>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Recommended Vaccines</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                  Recommended Vaccines
+                </h2>
                 <div className="grid grid-cols-1 gap-6">
                   {getVaccineRecommendations().map((vaccine) => (
                     <RecommendationCard key={vaccine.id} vaccine={vaccine} />
