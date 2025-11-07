@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       path:'/find-vaccine',
       element:<FindVaccine></FindVaccine>
     },{
-      path:'/vaccine/:id',
+      path:'/vaccine/:_id',
       element:<VaccineDetails></VaccineDetails>
     },{
       path:'/signup',

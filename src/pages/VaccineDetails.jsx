@@ -1,13 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Syringe, Calendar, Users, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Syringe,
+  Calendar,
+  Users,
+  CheckCircle,
+  AlertCircle,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
 import { mockVaccines } from "../data/MockData";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/Card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/Card";
 import { useToast } from "../hooks/use-toast";
 
 const container = {
@@ -20,7 +34,11 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 20 },
+  },
 };
 
 const sideEffectItem = {
@@ -29,16 +47,44 @@ const sideEffectItem = {
 };
 
 export default function VaccineDetails() {
-  const { id } = useParams();
+  const { _id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [applying, setApplying] = useState(false);
-  const vaccine = mockVaccines.find((v) => v.id === id);
 
-  if (!vaccine) {
+  const [vaccine, setVaccine] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [applying, setApplying] = useState(false);
+  useEffect(() => {
+    const fetchVaccine = async () => {
+      try {
+        console.log('hello ',_id);
+        const response = await fetch(
+          `http://localhost:5000/api/vaccine/${_id}`
+        );
+        if (!response.ok) throw new Error("nFailed to fetch vaccine details");
+
+        const data = await response.json();
+        setVaccine(data);
+      } catch (error) {
+        console.error("Error fetching vaccine:", error);
+        toast({
+          title: "Error",
+          description:
+            "Failed to load vaccine details. Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVaccine();
+  }, [_id, toast]);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-lg text-gray-600">Vaccine not found</p>
+        <p className="text-lg text-gray-600">Loading vaccine details...</p>
       </div>
     );
   }
@@ -46,7 +92,6 @@ export default function VaccineDetails() {
   const handleApply = async () => {
     setApplying(true);
     try {
-   
       await new Promise((resolve) => setTimeout(resolve, 1500));
       toast({
         title: "Application Successful!",
@@ -112,7 +157,7 @@ export default function VaccineDetails() {
                           {vaccine.name}
                         </CardTitle>
                         <CardDescription className="text-lg text-gray-600">
-                          by {vaccine.manufacturer}
+                          by {vaccine.produced_by}
                         </CardDescription>
                       </div>
                     </motion.div>
@@ -121,33 +166,56 @@ export default function VaccineDetails() {
                   <Badge
                     className={`
                       text-sm px-4 py-1.5 font-medium
-                      ${vaccine.availabilityCount > 1000
-                        ? "bg-emerald-100 text-emerald-800 border-emerald-300"
-                        : "bg-amber-100 text-amber-800 border-amber-300"
+                      ${
+                        vaccine.availabilityCount > 1000
+                          ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                          : "bg-amber-100 text-amber-800 border-amber-300"
                       }
                     `}
                   >
-                    {vaccine.availabilityCount > 1000 ? "In Stock" : "Limited"}
+                    {vaccine.avalable === true ? "In Stock" : "Limited"}
                   </Badge>
                 </div>
               </CardHeader>
 
               <CardContent className="space-y-7">
-               
                 <motion.p
                   variants={item}
                   className="text-gray-700 leading-relaxed text-base"
                 >
-                  {vaccine.description}
+                  {vaccine.details}
                 </motion.p>
 
                 {/* Stats Grid */}
-                <motion.div variants={container} className="grid grid-cols-2 gap-5">
+                <motion.div
+                  variants={container}
+                  className="grid grid-cols-2 gap-5"
+                >
                   {[
-                    { icon: Syringe, label: "Doses Required", value: vaccine.dosesRequired, color: "emerald" },
-                    { icon: Users, label: "Age Eligibility", value: vaccine.ageEligibility, color: "teal" },
-                    { icon: CheckCircle, label: "Efficacy Rate", value: vaccine.efficacy, color: "cyan" },
-                    { icon: Calendar, label: "Available Doses", value: vaccine.availabilityCount.toLocaleString(), color: "green" },
+                    {
+                      icon: Syringe,
+                      label: "Doses Required",
+                      value: vaccine.dosesRequired,
+                      color: "emerald",
+                    },
+                    {
+                      icon: Users,
+                      label: "Age Eligibility",
+                      value: vaccine.ageEligibility,
+                      color: "teal",
+                    },
+                    {
+                      icon: CheckCircle,
+                      label: "Efficacy Rate",
+                      value: vaccine.efficacy,
+                      color: "cyan",
+                    },
+                    {
+                      icon: Calendar,
+                      label: "Available Doses",
+                      value: vaccine.available,
+                      color: "green",
+                    },
                   ].map((stat, i) => (
                     <motion.div
                       key={i}
@@ -155,12 +223,20 @@ export default function VaccineDetails() {
                       whileHover={{ scale: 1.03 }}
                       className="group"
                     >
-                      <div className={`p-5 rounded-xl bg-gradient-to-br from-${stat.color}-50 to-white border border-${stat.color}-200 shadow-sm transition-all group-hover:shadow-md`}>
+                      <div
+                        className={`p-5 rounded-xl bg-gradient-to-br from-${stat.color}-50 to-white border border-${stat.color}-200 shadow-sm transition-all group-hover:shadow-md`}
+                      >
                         <div className="flex items-start gap-3">
-                          <stat.icon className={`w-6 h-6 text-${stat.color}-600 mt-0.5`} />
+                          <stat.icon
+                            className={`w-6 h-6 text-${stat.color}-600 mt-0.5`}
+                          />
                           <div>
-                            <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                            <p className={`text-2xl font-bold text-${stat.color}-700`}>
+                            <p className="text-sm font-medium text-gray-600">
+                              {stat.label}
+                            </p>
+                            <p
+                              className={`text-2xl font-bold text-${stat.color}-700`}
+                            >
                               {stat.value}
                             </p>
                           </div>
@@ -170,7 +246,6 @@ export default function VaccineDetails() {
                   ))}
                 </motion.div>
 
-                
                 <motion.div variants={item} className="space-y-3">
                   <h3 className="flex items-center gap-2 font-semibold text-gray-800">
                     <AlertCircle className="w-5 h-5 text-amber-600" />
@@ -178,7 +253,7 @@ export default function VaccineDetails() {
                   </h3>
                   <ul className="space-y-2">
                     <AnimatePresence>
-                      {vaccine.sideEffects.map((effect, index) => (
+                      {vaccine.side_effects.map((effect, index) => (
                         <motion.li
                           key={index}
                           variants={sideEffectItem}
@@ -199,7 +274,6 @@ export default function VaccineDetails() {
             </Card>
           </motion.div>
 
-        
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -210,7 +284,11 @@ export default function VaccineDetails() {
               <div className="absolute top-0 right-0 -mt-4 -mr-4">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
                 >
                   <Sparkles className="w-12 h-12 text-emerald-400 opacity-30" />
                 </motion.div>
@@ -230,7 +308,7 @@ export default function VaccineDetails() {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Current Availability</span>
                     <span className="font-bold text-emerald-700">
-                      {vaccine.availabilityCount.toLocaleString()}
+                      {vaccine.status}
                     </span>
                   </div>
                   <div className="flex justify-between">

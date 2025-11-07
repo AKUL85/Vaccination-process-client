@@ -149,7 +149,7 @@ export default function FindVaccine() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
           {vaccines?.map((vaccine) => (
             <motion.div
-              key={vaccine.id}
+              key={vaccine._id}
               variants={itemVariants}
               whileHover={{
                 y: -8,
@@ -205,9 +205,9 @@ export default function FindVaccine() {
                 }
                 transition-colors backdrop-blur-sm
               `}
-                    >
-                      {vaccine.availabilityCount > 0 ? (
-                        <>
+                > 
+                      {vaccine.available === true ? (
+                        <> 
                           <CheckCircle className="w-4 h-4 mr-1.5" />
                           Available
                         </>
@@ -268,7 +268,7 @@ export default function FindVaccine() {
                   "
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`/vaccine/${vaccine.id}`);
+                            navigate(`/vaccine/${vaccine._id}`);
                           }}
                         >
                           View Details
