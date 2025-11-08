@@ -65,6 +65,7 @@ export default function VaccineDetails() {
 
         const data = await response.json();
         setVaccine(data);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching vaccine:", error);
         toast({
@@ -255,7 +256,7 @@ export default function VaccineDetails() {
                   </h3>
                   <ul className="space-y-2">
                     <AnimatePresence>
-                      {vaccine.side_effects.map((effect, index) => (
+                      {vaccine.sideEffects.map((effect, index) => (
                         <motion.li
                           key={index}
                           variants={sideEffectItem}

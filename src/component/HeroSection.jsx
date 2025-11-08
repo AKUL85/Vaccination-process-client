@@ -5,7 +5,9 @@ import Lottie from "lottie-react";
 import lottieAnimation from "../assets/Covid Vaccination.json";
 import AnimatedHeading from "./AnimateHeading";
 
+
 const HeroSection = () => (
+ 
   <motion.section
     id="home"
     className="pt-32 pb-20 bg-gradient-to-br from-white to-blue-50"
@@ -29,17 +31,12 @@ const HeroSection = () => (
         </p>
         <div className="flex justify-center lg:justify-start gap-6">
           <Link
-            to="/auth"
+            to="/find-vaccine"
             className="btn btn-primary btn-lg shadow-xl text-white hover:scale-105 transform transition duration-300"
           >
             Get Started Now
           </Link>
-          <a
-            href="#features"
-            className="btn btn-outline btn-primary btn-lg hover:bg-primary/20 transition duration-300"
-          >
-            Learn More
-          </a>
+         
         </div>
       </motion.div>
 

@@ -16,9 +16,15 @@ import AppointmentBooking from "./pages/AppointmentBooking";
 import AdminDashboard from "./pages/AdminDashboard";
 import StaffDashboard from "./pages/StaffDashBoard";
 import UserDashboard from "./pages/UserDashboard";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./context/ProtectedRoute";
+import Dashboard from "./component/Dashboard";
 
-const router = createBrowserRouter([
+
+const router = createBrowserRouter(
+  
+  
+  [
   {
     path: "/",
     element: <Main></Main>,
@@ -49,11 +55,20 @@ const router = createBrowserRouter([
       },
       {
         path: "/appointment/:_id",
-        element: <AppointmentBooking></AppointmentBooking>,
+        element: (
+          // <ProtectedRoute>
+            <AppointmentBooking></AppointmentBooking>
+          // </ProtectedRoute>
+        ),
       },
       {
         path: "/dashboard",
-        element: <UserDashboard></UserDashboard>,
+        element: (
+          // <ProtectedRoute>
+            
+            <Dashboard></Dashboard>
+          // </ProtectedRoute>
+        ),
       },
       // {
       //   path: "/user-dashboard",

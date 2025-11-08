@@ -205,9 +205,9 @@ export default function FindVaccine() {
                 }
                 transition-colors backdrop-blur-sm
               `}
-                > 
-                      {vaccine.available === true ? (
-                        <> 
+                    >
+                      {vaccine.availabilityCount > 0 ? (
+                        <>
                           <CheckCircle className="w-4 h-4 mr-1.5" />
                           Available
                         </>
