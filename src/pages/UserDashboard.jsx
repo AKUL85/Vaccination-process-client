@@ -24,7 +24,7 @@ import RecommendationCard from "../component/RecommendationCard";
 import Sidebar from "../component/Sidebar";
 import { useAuth } from "../context/AuthContext";
 
-const UserDashboard = () => {
+const UserDashboard = ({userInfo}) => {
   const { user, loading } = useAuth();
   const [userData, setUserData] = useState(null);
 
@@ -111,7 +111,7 @@ const UserDashboard = () => {
       <div className="container mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar */}
         <Sidebar
-          user={mockUser}
+          user={userInfo}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />

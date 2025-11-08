@@ -9,10 +9,11 @@ import UserDashboard from "../pages/UserDashboard";
 
 const Dashboard = () => {
   const { user } = useAuth(); // current logged-in user from context
-  console.log(user);
+  console.log(user.email);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState(null);
+  const [userInfo, setUserInfo] = useState({})
 
   useEffect(() => {
     // If no user is logged in, redirect to login
@@ -21,14 +22,17 @@ const Dashboard = () => {
       return;
     }
 
-    // If user exists, fetch their role from backend
+    // If user exist, fetch their role from backend
     const fetchUserRole = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/${user.uid}`);
+        const res = await fetch(
+          `http://localhost:5000/api/users?email=${user.email}`
+        );
         if (!res.ok) throw new Error("Failed to fetch user data");
 
         const data = await res.json();
         setRole(data.role); // 'admin', 'staff', or 'user'
+        setUserInfo(data);
       } catch (err) {
         console.error("Error fetching user role:", err);
       } finally {
@@ -56,7 +60,7 @@ const Dashboard = () => {
     case "staff":
       return <StaffDashboard />;
     case "user":
-      return <UserDashboard />;
+      return <UserDashboard userInfo={userInfo} />;
     default:
       return (
         <div className="flex flex-col items-center justify-center h-screen text-center">

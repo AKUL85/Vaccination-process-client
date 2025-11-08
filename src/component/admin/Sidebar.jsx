@@ -20,7 +20,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => (
         <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <Shield className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-lg font-semibold text-gray-900">National Admin</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Admin</h2>
         <p className="text-sm text-gray-600">Vaccine Management</p>
         <p className="text-xs text-gray-500 mt-1">8 Regions • 48 Centers</p>
       </div>

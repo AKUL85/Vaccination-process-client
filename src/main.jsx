@@ -21,10 +21,7 @@ import ProtectedRoute from "./context/ProtectedRoute";
 import Dashboard from "./component/Dashboard";
 
 
-const router = createBrowserRouter(
-  
-  
-  [
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Main></Main>,
@@ -57,7 +54,7 @@ const router = createBrowserRouter(
         path: "/appointment/:_id",
         element: (
           // <ProtectedRoute>
-            <AppointmentBooking></AppointmentBooking>
+          <AppointmentBooking></AppointmentBooking>
           // </ProtectedRoute>
         ),
       },
@@ -65,8 +62,8 @@ const router = createBrowserRouter(
         path: "/dashboard",
         element: (
           // <ProtectedRoute>
-            
-            <Dashboard></Dashboard>
+
+          <Dashboard></Dashboard>
           // </ProtectedRoute>
         ),
       },

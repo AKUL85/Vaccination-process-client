@@ -1,6 +1,8 @@
-import React from "react";
 import { format } from "date-fns";
 import { CheckCircle, Download, ShieldCheck } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 
 const InfoField = ({ label, value }) => (
   <div className="bg-gray-50 p-2 rounded-md border border-gray-200">
@@ -10,6 +12,31 @@ const InfoField = ({ label, value }) => (
 );
 
 const TikaCard = ({ userData }) => {
+  const id = useParams();
+  const user = useAuth();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    // If user exist, fetch their role from backend
+    const fetchUserRole = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/users?email=${user.email}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch user data");
+
+        const data = await res.json();
+        setUserInfo(data);
+        console.log(data);
+      } catch (err) {
+        console.error("Error fetching user role:", err);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchUserRole();
+  }, [user]);
   if (!userData) {
     return <div>Loading Tika Card...</div>;
   }
@@ -82,9 +109,7 @@ const TikaCard = ({ userData }) => {
         </div>
 
         <div className="bg-green-700 text-white text-center p-2 mt-4 rounded">
-          <h1 className="text-xl font-bold">
-            COVID-19 Vaccination Card / কোভিড-১৯ ভ্যাকসিনেশন কার্ড
-          </h1>
+          <h1 className="text-xl font-bold">{id.name}</h1>
         </div>
       </header>
 
@@ -97,11 +122,12 @@ const TikaCard = ({ userData }) => {
             <InfoField
               label="Name (English) / নাম (ইংরেজি)"
               value={userData.name}
+              // value={userInfo.name}
             />
-            <InfoField
+            {/* <InfoField
               label="Name (Bangla) / নাম (বাংলা)"
               value={userData.nameBangla}
-            />
+            /> */}
             <InfoField
               label="Date of Birth / জন্ম তারিখ"
               value={format(new Date(userData.dob), "dd MMMM yyyy")}
